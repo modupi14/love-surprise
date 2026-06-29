@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Masa ❤️</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #e8486a;
+    --blush: #f9a8c0;
+    --deep: #b5175a;
+    --petal: #fde8ef;
+    --white: #fff8fb;
+    --text: #4a1030;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    background: linear-gradient(135deg, #b5175a 0%, #e8486a 40%, #f9a8c0 100%);
+    overflow: hidden;
+    color: var(--text);
+    user-select: none;
+  }
+
+  /* PAGES */
+  .page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s ease;
+    z-index: 1;
+  }
+  .page.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* CARD */
+  .card {
+    background: rgba(255,248,251,0.92);
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 40px 36px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 48px rgba(180,20,90,0.22), 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    color: var(--deep);
+    line-height: 1.3;
+    margin-bottom: 18px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    color: var(--deep);
+    margin-bottom: 14px;
+  }
+  p {
+    font-size: clamp(0.95rem, 3vw, 1.1rem);
+    color: #7a2040;
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-block;
+    padding: 14px 36px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    transition: transform 0.15s, box-shadow 0.15s;
+    margin: 8px;
+    outline: none;
+  }
+  .btn:active { transform: scale(0.95); }
+
+  .btn-yes {
+    background: linear-gradient(135deg, var(--rose), var(--deep));
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(180,20,90,0.35);
+  }
+  .btn-yes:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(180,20,90,0.45); }
+
+  .btn-no {
+    background: rgba(255,255,255,0.7);
+    color: var(--deep);
+    border: 2px solid var(--blush);
+    position: fixed;
+    z-index: 99;
+    transition: none;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--deep);
+    border: 2.5px solid var(--rose);
+    box-shadow: 0 2px 12px rgba(180,20,90,0.1);
+  }
+  .btn-outline:hover { background: var(--rose); color: #fff; transform: scale(1.04); }
+
+  /* DIVIDER */
+  .divider { width: 60px; height: 3px; background: linear-gradient(90deg,var(--rose),var(--blush)); border-radius: 4px; margin: 18px auto; }
+
+  /* TYPING */
+  #typing-text { min-height: 3.5em; }
+  .cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--rose); vertical-align: middle; animation: blink 0.8s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* CATCH HEART GAME */
+  #heart-target {
+    position: fixed;
+    font-size: 56px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.1s;
+    filter: drop-shadow(0 4px 12px rgba(180,20,90,0.5));
+    animation: pulse 0.8s ease-in-out infinite;
+  }
+  #heart-target:hover { transform: scale(1.2); }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+
+  #catch-progress {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,248,251,0.92);
+    padding: 10px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    color: var(--deep);
+    font-size: 1.1rem;
+    z-index: 10;
+    box-shadow: 0 2px 16px rgba(180,20,90,0.2);
+  }
+
+  /* QUIZ */
+  .quiz-input {
+    width: 100%;
+    padding: 13px 18px;
+    border-radius: 14px;
+    border: 2.5px solid var(--blush);
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+    color: var(--text);
+    background: #fff8fb;
+    outline: none;
+    margin: 14px 0 18px;
+    transition: border-color 0.2s;
+  }
+  .quiz-input:focus { border-color: var(--rose); }
+
+  /* POPUP */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(180,20,90,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .popup-overlay.show { opacity: 1; pointer-events: all; }
+  .popup-box {
+    background: #fff8fb;
+    border-radius: 22px;
+    padding: 32px 40px;
+    text-align: center;
+    box-shadow: 0 8px 48px rgba(180,20,90,0.3);
+    font-size: 1.3rem;
+    font-family: 'Playfair Display', serif;
+    color: var(--deep);
+    animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+
+  /* MEMORY GAME */
+  #page7 {
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: min(360px, 92vw);
+    margin: 0 auto 14px;
+  }
+  .mem-card {
+    width: 100%;
+    aspect-ratio: 1;
+    perspective: 600px;
+    cursor: pointer;
+  }
+  .mem-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s;
+    border-radius: 10px;
+  }
+  .mem-card.flipped .mem-card-inner { transform: rotateY(180deg); }
+  .mem-card-front, .mem-card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mem-card-front {
+    background: linear-gradient(135deg, var(--rose), var(--deep));
+    color: #fff;
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
+    font-weight: 700;
+  }
+  .mem-card-back {
+    background: #fff8fb;
+    transform: rotateY(180deg);
+    border: 2px solid var(--blush);
+    box-shadow: 0 2px 10px rgba(180,20,90,0.12);
+    font-size: clamp(1.2rem, 5.5vw, 1.8rem);
+  }
+  .mem-card.matched .mem-card-back {
+    background: #fde8ef;
+    border-color: var(--rose);
+  }
+
+  #memory-msg {
+    min-height: 1.6em;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    text-shadow: 0 1px 6px rgba(100,0,40,0.3);
+    margin-top: 4px;
+    transition: opacity 0.3s;
+  }
+
+  /* COUNTDOWN */
+  #countdown-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(5rem, 22vw, 10rem);
+    color: #fff;
+    text-shadow: 0 4px 32px rgba(180,20,90,0.5);
+    animation: countPop 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes countPop { from{transform:scale(0.3);opacity:0} to{transform:scale(1);opacity:1} }
+
+  /* FINAL PAGE */
+  #final-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 5vw, 2.2rem);
+    color: rgba(255,210,230,0.95);
+    text-align: center;
+    text-shadow: 0 2px 16px rgba(100,0,40,0.4);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    animation: fadeUp 0.9s ease;
+  }
+  #final-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 8vw, 4rem);
+    color: #fff;
+    text-shadow: 0 4px 24px rgba(100,0,40,0.4);
+    text-align: center;
+    line-height: 1.2;
+    animation: fadeUp 1.2s ease;
+  }
+  #final-sub {
+    font-size: clamp(0.95rem, 3.2vw, 1.2rem);
+    color: rgba(255,230,240,0.95);
+    text-align: center;
+    margin-top: 22px;
+    max-width: 520px;
+    line-height: 1.75;
+    animation: fadeUp 1.5s ease;
+    padding: 0 10px;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* FLOATING HEARTS */
+  .float-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    font-size: 1.5rem;
+    animation: floatUp linear forwards;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(-120vh) scale(1.4) rotate(30deg); }
+  }
+
+  /* CANVAS fireworks */
+  #fw-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* BG BUBBLES */
+  .bg-bubble {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    pointer-events: none;
+    animation: drift linear infinite;
+  }
+  @keyframes drift {
+    0% { transform: translateY(110vh) scale(0.8); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+  }
+
+  /* RESPONSIVE TWEAKS */
+  @media (max-width: 420px) {
+    .card { padding: 28px 18px; }
+    #memory-grid { gap: 7px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fw-canvas"></canvas>
+<audio id="bgm" src="sweet-thing.mp3" loop></audio>
+
+<!-- BG BUBBLES -->
+<div id="bubbles"></div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box" id="popup-text"></div>
+</div>
+
+<!-- ===== PAGE 1 ===== -->
+<div class="page active" id="page1">
+  <div class="card">
+    <h1>Hey beautiful ❤️</h1>
+    <div class="divider"></div>
+    <p>Do you want to see something special?</p>
+    <div style="margin-top:28px">
+      <button class="btn btn-yes" onclick="startYes()">Yes ❤️</button>
+      <button class="btn btn-no" id="no-btn1">No</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE 2 ===== -->
+<div class="page" id="page2">
+  <div class="card">
+    <h1>I made something for you ❤️</h1>
+    <div class="divider"></div>
+    <div style="margin-top:24px">
+      <button class="btn btn-yes" onclick="goTo('page3', initTyping)">Open Letter 💌</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE 3 ===== -->
+<div class="page" id="page3">
+  <div class="card">
+    <h2>Dear Masa ❤️</h2>
+    <div class="divider"></div>
+    <p id="typing-text"></p>
+    <div id="typing-btn" style="margin-top:24px;display:none">
+      <button class="btn btn-yes" onclick="goTo('page4', initCatchHeart)">Start Challenge 💪</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE 4 ===== -->
+<div class="page" id="page4">
+  <div id="catch-progress" style="display:none">Caught: <span id="catch-count">0</span> / 5</div>
+  <div id="heart-target" style="display:none" onclick="catchHeart()">❤️</div>
+  <div class="card" id="catch-card">
+    <h2>Catch the Heart! ❤️</h2>
+    <div class="divider"></div>
+    <p>Click the heart <strong>5 times</strong> to continue!</p>
+    <button class="btn btn-yes" onclick="startCatch()" style="margin-top:18px">Ready? Go! 🏃</button>
+  </div>
+</div>
+
+<!-- ===== PAGE 5 ===== -->
+<div class="page" id="page5">
+  <div class="card">
+    <h1>You thought you were done?</h1>
+    <div class="divider"></div>
+    <p style="font-size:1.3rem">Think again 😏</p>
+    <button class="btn btn-yes" onclick="goTo('page6', initQuiz)" style="margin-top:24px">Next 👀</button>
+  </div>
+</div>
+
+<!-- ===== PAGE 6 ===== -->
+<div class="page" id="page6">
+  <div class="card" id="quiz-card">
+    <h2 id="quiz-q">Question 1</h2>
+    <div class="divider"></div>
+    <p id="quiz-text"></p>
+    <input class="quiz-input" id="quiz-input" type="text" placeholder="Your answer..." autocomplete="off">
+    <button class="btn btn-yes" onclick="checkQuiz()">Submit 💖</button>
+  </div>
+</div>
+
+<!-- ===== PAGE 7 ===== -->
+<div class="page" id="page7">
+  <div style="text-align:center;margin-bottom:16px">
+    <h2 style="color:#fff;text-shadow:0 2px 12px rgba(100,0,40,0.4)">Memory Game 🧠</h2>
+    <p style="color:rgba(255,230,240,0.9);font-size:0.95rem">Match all 8 pairs to continue!</p>
+  </div>
+  <div id="memory-grid"></div>
+  <div id="memory-msg"></div>
+</div>
+
+<!-- ===== PAGE 8 ===== -->
+<div class="page" id="page8">
+  <div class="card">
+    <h1>I think you deserve to see the message now ❤️</h1>
+    <div class="divider"></div>
+    <button class="btn btn-yes" onclick="goTo('page9', initNoBtn2)" style="margin-top:20px">Continue 🌹</button>
+  </div>
+</div>
+
+<!-- ===== PAGE 9 ===== -->
+<div class="page" id="page9">
+  <div class="card">
+    <h1>Are you ready to see what's on the next page? ❤️</h1>
+    <div class="divider"></div>
+    <div style="margin-top:28px">
+      <button class="btn btn-yes" onclick="goTo('page10', startCountdown)">Yes, I'm ready! ❤️</button>
+      <button class="btn btn-no" id="no-btn2">No</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE 10 ===== -->
+<div class="page" id="page10">
+  <div id="countdown-num">3</div>
+</div>
+
+<!-- ===== PAGE 11 ===== -->
+<div class="page" id="page11">
+  <div id="final-name">Masande Ntlantsana</div>
+  <div id="final-title">I LOVE YOU ❤️</div>
+  <div id="final-sub">You've brought so much calm and meaning into my life, and being around you just feels easy and special. You make my days better without even trying, and I care about you more than I say. I just wanted you to know that you matter to me, and I genuinely appreciate having you in my life. 🌹</div>
+</div>
+
+<script>
+// ─── UTILS ────────────────────────────────────────────────────────────────
+function goTo(pageId, callback) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if (callback) setTimeout(callback, 400);
+}
+
+function showPopup(msg, duration = 1800) {
+  const overlay = document.getElementById('popup');
+  document.getElementById('popup-text').textContent = msg;
+  overlay.classList.add('show');
+  return new Promise(res => setTimeout(() => { overlay.classList.remove('show'); res(); }, duration));
+}
+
+// ─── BG BUBBLES ───────────────────────────────────────────────────────────
+(function spawnBubbles() {
+  const container = document.getElementById('bubbles');
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement('div');
+    b.className = 'bg-bubble';
+    const size = 40 + Math.random() * 100;
+    b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${8+Math.random()*14}s;animation-delay:${-Math.random()*14}s;`;
+    container.appendChild(b);
+  }
+})();
+
+// ─── NO BUTTON LOGIC ──────────────────────────────────────────────────────
+const noMsgs = ["Are you sure? 😢","Really? 🥺","Think again ❤️","Nope 😂"];
+let noMsgIdx = 0;
+function initNoButton(btn) {
+  if (!btn) return;
+  // Position randomly
+  function moveBtn() {
+    const margin = 80;
+    const x = margin + Math.random() * (window.innerWidth - 2*margin - btn.offsetWidth);
+    const y = margin + Math.random() * (window.innerHeight - 2*margin - btn.offsetHeight);
+    btn.style.left = x + 'px';
+    btn.style.top = y + 'px';
+    noMsgIdx = (noMsgIdx + 1) % noMsgs.length;
+    btn.textContent = noMsgs[noMsgIdx];
+  }
+  // Initial position
+  btn.style.left = (window.innerWidth/2 + 60) + 'px';
+  btn.style.top = (window.innerHeight/2 + 20) + 'px';
+  btn.addEventListener('mouseenter', moveBtn);
+  btn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); }, { passive: false });
+  btn.addEventListener('mousemove', moveBtn);
+}
+initNoButton(document.getElementById('no-btn1'));
+function initNoBtn2() { initNoButton(document.getElementById('no-btn2')); }
+
+// ─── PAGE 1 – YES ─────────────────────────────────────────────────────────
+function startYes() {
+  const bgm = document.getElementById('bgm');
+  bgm.play().catch(() => {});
+  goTo('page2');
+}
+
+// ─── PAGE 3 – TYPING ──────────────────────────────────────────────────────
+function initTyping() {
+  const msg = "Before you see my message, you must be tested first 😏\n\nYou are very special to me ❤️";
+  const el = document.getElementById('typing-text');
+  el.innerHTML = '';
+  document.getElementById('typing-btn').style.display = 'none';
+  let i = 0;
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  el.appendChild(cursor);
+  const interval = setInterval(() => {
+    if (i < msg.length) {
+      const ch = msg[i];
+      cursor.before(ch === '\n' ? document.createElement('br') : document.createTextNode(ch));
+      i++;
+    } else {
+      clearInterval(interval);
+      cursor.remove();
+      document.getElementById('typing-btn').style.display = 'block';
+    }
+  }, 38);
+}
+
+// ─── PAGE 4 – CATCH THE HEART ─────────────────────────────────────────────
+let catchCount = 0;
+function initCatchHeart() {
+  catchCount = 0;
+  document.getElementById('catch-card').style.display = '';
+  document.getElementById('heart-target').style.display = 'none';
+  document.getElementById('catch-progress').style.display = 'none';
+  document.getElementById('catch-count').textContent = '0';
+}
+function startCatch() {
+  document.getElementById('catch-card').style.display = 'none';
+  document.getElementById('heart-target').style.display = 'block';
+  document.getElementById('catch-progress').style.display = 'block';
+  moveHeart();
+}
+function moveHeart() {
+  const el = document.getElementById('heart-target');
+  const margin = 70;
+  const x = margin + Math.random() * (window.innerWidth - 2*margin - 60);
+  const y = margin + Math.random() * (window.innerHeight - 2*margin - 60);
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+}
+function catchHeart() {
+  catchCount++;
+  document.getElementById('catch-count').textContent = catchCount;
+  if (catchCount >= 5) {
+    document.getElementById('heart-target').style.display = 'none';
+    document.getElementById('catch-progress').style.display = 'none';
+    setTimeout(() => goTo('page5'), 400);
+  } else {
+    moveHeart();
+  }
+}
+
+// ─── PAGE 6 – QUIZ ────────────────────────────────────────────────────────
+const questions = [
+  { q: "Who texted first?", a: "you" },
+  { q: "Who gave the kiss first?", a: "me" }
+];
+let quizIdx = 0;
+function initQuiz() {
+  quizIdx = 0;
+  showQuestion();
+}
+function showQuestion() {
+  document.getElementById('quiz-q').textContent = `Question ${quizIdx+1}`;
+  document.getElementById('quiz-text').textContent = questions[quizIdx].q;
+  document.getElementById('quiz-input').value = '';
+  document.getElementById('quiz-input').focus();
+}
+async function checkQuiz() {
+  const val = document.getElementById('quiz-input').value.trim().toLowerCase();
+  const correct = val === questions[quizIdx].a.toLowerCase();
+  await showPopup(correct ? "Good job ❤️" : "Wrong… but I will let you continue 😂", 1800);
+  quizIdx++;
+  if (quizIdx < questions.length) {
+    showQuestion();
+  } else {
+    goTo('page7', initMemory);
+  }
+}
+document.getElementById('quiz-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkQuiz();
+});
+
+// ─── PAGE 7 – MEMORY GAME ─────────────────────────────────────────────────
+const memSymbols = ['❤️','🌹','💌','💖','😏','👀','✨','💕'];
+let memFlipped = [], memMatched = 0, memLocked = false;
+function initMemory() {
+  memMatched = 0; memFlipped = []; memLocked = false;
+  document.getElementById('memory-msg').textContent = '';
+  const cards = [...memSymbols, ...memSymbols].sort(() => Math.random()-0.5);
+  const grid = document.getElementById('memory-grid');
+  grid.innerHTML = '';
+  cards.forEach((sym, i) => {
+    const card = document.createElement('div');
+    card.className = 'mem-card';
+    card.dataset.symbol = sym;
+    card.dataset.idx = i;
+    card.innerHTML = `<div class="mem-card-inner"><div class="mem-card-front">?</div><div class="mem-card-back">${sym}</div></div>`;
+    card.addEventListener('click', () => flipCard(card));
+    grid.appendChild(card);
+  });
+}
+async function flipCard(card) {
+  if (memLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  memFlipped.push(card);
+  if (memFlipped.length === 2) {
+    memLocked = true;
+    const [a, b] = memFlipped;
+    if (a.dataset.symbol === b.dataset.symbol) {
+      a.classList.add('matched'); b.classList.add('matched');
+      memMatched++;
+      showMemMsg("Good job ❤️");
+      memFlipped = []; memLocked = false;
+      if (memMatched === 8) setTimeout(() => goTo('page8'), 900);
+    } else {
+      showMemMsg("Not this one… but I still love you 😌");
+      await delay(1100);
+      a.classList.remove('flipped'); b.classList.remove('flipped');
+      memFlipped = []; memLocked = false;
+    }
+  }
+}
+let memMsgTimer;
+function showMemMsg(msg) {
+  const el = document.getElementById('memory-msg');
+  el.textContent = msg;
+  clearTimeout(memMsgTimer);
+  memMsgTimer = setTimeout(() => { el.textContent = ''; }, 1400);
+}
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── PAGE 10 – COUNTDOWN ─────────────────────────────────────────────────
+function startCountdown() {
+  let n = 3;
+  const el = document.getElementById('countdown-num');
+  el.textContent = n;
+  const tick = setInterval(() => {
+    n--;
+    if (n > 0) {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = 'countPop 0.5s cubic-bezier(.34,1.56,.64,1)';
+      el.textContent = n;
+    } else {
+      clearInterval(tick);
+      goTo('page11', startFinalCelebration);
+    }
+  }, 1000);
+}
+
+// ─── PAGE 11 – CELEBRATION ───────────────────────────────────────────────
+const celebEmojis = ['❤️','💖','✨','🌹','💕','💗','🌟','💝'];
+function spawnHeart() {
+  const el = document.createElement('div');
+  el.className = 'float-heart';
+  el.textContent = celebEmojis[Math.floor(Math.random()*celebEmojis.length)];
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.bottom = '-40px';
+  const dur = 3 + Math.random()*4;
+  el.style.animationDuration = dur + 's';
+  el.style.fontSize = (1 + Math.random()*1.8) + 'rem';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), dur*1000);
+}
+
+// Fireworks
+const fwCanvas = document.getElementById('fw-canvas');
+const fwCtx = fwCanvas.getContext('2d');
+let fwParticles = [];
+function resizeCanvas() {
+  fwCanvas.width = window.innerWidth;
+  fwCanvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function launchFirework() {
+  const x = 0.1*window.innerWidth + Math.random()*0.8*window.innerWidth;
+  const y = 0.1*window.innerHeight + Math.random()*0.6*window.innerHeight;
+  const colors = ['#e8486a','#f9a8c0','#b5175a','#fff0f5','#ffb3c6','#ff6b9d'];
+  const color = colors[Math.floor(Math.random()*colors.length)];
+  const count = 28 + Math.floor(Math.random()*20);
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI*2/count)*i;
+    const speed = 2 + Math.random()*4;
+    fwParticles.push({
+      x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+      alpha: 1, color, radius: 3+Math.random()*3, life: 0.7+Math.random()*0.5
+    });
+  }
+}
+
+let fwRunning = false;
+function animateFW() {
+  if (!fwRunning) return;
+  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  fwParticles.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.07;
+    p.vx *= 0.97; p.alpha -= 0.018;
+    fwCtx.globalAlpha = Math.max(0, p.alpha);
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+    fwCtx.fillStyle = p.color;
+    fwCtx.fill();
+  });
+  fwCtx.globalAlpha = 1;
+  fwParticles = fwParticles.filter(p => p.alpha > 0);
+  requestAnimationFrame(animateFW);
+}
+
+function startFinalCelebration() {
+  fwRunning = true;
+  animateFW();
+  setInterval(launchFirework, 600);
+  setInterval(spawnHeart, 300);
+}
+</script>
+</body>
+</html>
